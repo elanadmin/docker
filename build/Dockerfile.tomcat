@@ -1,0 +1,56 @@
+# sshd and tomcat
+#
+# VERSION               0.0.2
+
+FROM ubuntu:14.04
+MAINTAINER Rajesh Moturi<rajesh2info@gmail.com>
+
+RUN apt-get clean  && rm -rf /var/lib/apt/lists/*
+RUN apt-get clean && apt-get update && apt-get install -y openssh-server
+RUN mkdir /var/run/sshd
+RUN echo 'root:Centos6.5' | chpasswd
+RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# SSH login fix. Otherwise user is kicked off after login
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+ENV NOTVISIBLE "in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
+
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]
+####################################################################
+
+RUN apt-get update && apt-get -y install python-software-properties software-properties-common
+RUN add-apt-repository ppa:webupd8team/java
+RUN apt-get update && apt-get -y upgrade
+
+#   # automatically accept oracle license
+RUN echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+
+#   # and install java 7 oracle jdk
+RUN apt-get -y install oracle-java7-installer && apt-get clean
+RUN update-alternatives --display java
+RUN echo "JAVA_HOME=/usr/lib/jvm/java-7-oracle" >> /etc/environment
+
+####################################################################
+# Install Tomcat
+#RUN apt-get update && sudo apt-get -y install tomcat7 tomcat7-docs tomcat7-admin tomcat7-examples lsof
+RUN apt-get update && sudo apt-get -y install tomcat7 lsof
+RUN echo "JAVA_HOME=/usr/lib/jvm/java-7-oracle" >> /etc/default/tomcat7
+#
+## Add your webapp file into your docker image into Tomcat's webapps directory
+## Your webapp file must be at the same location as your Dockerfile
+# ADD mywebapp.war /var/lib/tomcat7/webapps/
+#
+## Expose TCP port 8080
+EXPOSE 8080
+#
+# # Start Tomcat server
+# # The last line (the CMD command) is used to make a fake always-running
+# # command (the tail command); thus, the Docker container will keep running.
+
+#RUN mkdir -p /usr/share/tomcat7/conf && mkdir -p /usr/share/tomcat7/logs && mkdir -p /usr/share/tomcat7/webapps
+#ADD server.xml /usr/share/tomcat7/conf/server.xml
+#ADD HelloWorld.war /usr/share/tomcat7/webapps/HelloWorld.war
+#ENTRYPOINT service tomcat7 start && tail -f /var/log/tomcat7/catalina.out
