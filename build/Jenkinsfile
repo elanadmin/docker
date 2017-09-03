@@ -1,7 +1,8 @@
 node {
-    def app
 
     build job: 'Docker-Build-SSH', parameters: [[$class: 'LabelParameterValue', name: 'node', label: 'Docker-Slave-edaldokp01']]
+
+    def app
 
     stage('Clone repository') {
         /* Let's make sure we have the repository cloned to our workspace */
