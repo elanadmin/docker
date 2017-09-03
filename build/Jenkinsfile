@@ -1,4 +1,4 @@
-node {
+node (Docker-Slave-edaldokp01) {
     def app
 
     stage('Clone repository') {
@@ -11,7 +11,7 @@ node {
         /* This builds the actual image; synonymous to
          * docker build on the command line */
 
-        app = docker.build("ubuntu-ssh")
+        app = docker.build("ubuntu-ssh", "-f build/Dockerfile.ssh .")
     }
 
     stage('Test image') {
