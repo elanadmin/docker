@@ -1,6 +1,4 @@
-node {
-
-    build job: 'Docker-Build-SSH', parameters: [[$class: 'LabelParameterValue', name: 'node', label: 'Docker-Slave-edaldokp01']]
+node ('edaldokp01.elan.elantecs.com'){
 
     def app
 
