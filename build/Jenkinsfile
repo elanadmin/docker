@@ -1,4 +1,4 @@
-node ('Docker-Slave-edaldokp01'){
+node {
     def app
 
     stage('Clone repository') {
