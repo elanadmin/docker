@@ -4,7 +4,7 @@ node ("$TargetBuildSlave"){
 
     properties([
       parameters([
-        string(name: 'DockerImageName', defaultValue: 'ubuntu-ssh', description: 'Docker Image Name That Needs To Be Built', ),
+        string(name: 'DockerImageName', defaultValue: 'ubuntu-elan-ssh', description: 'Docker Image Name That Needs To Be Built', ),
         string(name: 'TargetBuildSlave', defaultValue: 'edaldokp01.elan.elantecs.com', description: 'Docker Slave', ),
         string(name: 'Dockerfile', defaultValue: 'Dockerfile', description: 'Docker Build Input File', )
        ])
