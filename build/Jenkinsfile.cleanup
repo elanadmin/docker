@@ -6,7 +6,7 @@ node ("$TargetBuildSlave"){
 
     dir ('build') {
         sh 'pwd'
-        docker rmi $DockerImageName --force
+        sh 'docker rmi $DockerImageName --force'
         }
     }
 }
