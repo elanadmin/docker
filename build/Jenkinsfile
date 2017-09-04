@@ -16,16 +16,14 @@ node ("$TargetBuildSlave"){
         checkout scm
     }
 
-    dir ('build') {
-          sh 'pwd'
-    }
-
-
     stage('Build image') {
         /* This builds the actual image; synonymous to
          * docker build on the command line */
 
+    dir ('build') {
+        sh 'pwd'
         app = docker.build("$DockerImageName", "-f $Dockerfile .")
+        }
     }
 
     stage('Test image') {
