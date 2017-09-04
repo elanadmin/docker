@@ -7,7 +7,7 @@ node ("$TargetBuildSlave"){
     dir ('build') {
         sh 'pwd'
         sh 'docker rmi $DockerImageName --force'
-        sh 'docker images | grep /$DockerImageName | awk '{print $3}' | xargs -I {} docker rmi {} --force'
+        sh 'docker images | grep $DockerImageName | awk '{print $3}' | xargs -I {} docker rmi {} --force'
         }
     }
 }
