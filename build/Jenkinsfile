@@ -27,8 +27,7 @@ node ("$TargetBuildSlave"){
     }
 
     stage('Test image') {
-        /* Ideally, we would run a test framework against our image.
-         * For this example, we're using a Volkswagen-type approach ;-) */
+        /* Ideally, we would run a test framework against our image. */
 
         app.inside {
             sh 'echo "Tests passed"'
@@ -45,4 +44,10 @@ node ("$TargetBuildSlave"){
             app.push("latest")
         }
     }
+
+   stage('Triggering Docker Image Cleanup') {
+        /* This will cleanup the local docker images built. */
+        build job: 'Docker-Build-Cleanup', parameters: [[$class: 'StringParameterValue', name: 'DockerImageName', value: "$DockerImageName"], [$class: 'StringParameterValue', name: 'TargetBuildSlave', value: "$TargetBuildSlave"]]
+    }
+
 }

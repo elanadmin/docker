@@ -1,0 +1,12 @@
+node ("$TargetBuildSlave"){
+
+    stage('Cleanup Build image') {
+        /* This will cleanup the build image; synonymous to
+         * docker rmi on the command line */
+
+    dir ('build') {
+        sh 'pwd'
+        docker rmi $DockerImageName --force
+        }
+    }
+}
