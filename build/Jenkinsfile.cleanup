@@ -8,7 +8,7 @@ node ("$TargetBuildSlave"){
         sh 'pwd'
         sh 'docker rmi $DockerImageName --force'
         script {
-           def pipe_script = $/eval "docker images | grep $DockerImageName | awk '{print $3}' | xargs -I {} docker rmi {} --force"/$
+           def pipe_script = $/eval "docker images | grep $DockerImageName | awk '{print \$3}' | xargs -I {} docker rmi {} --force"/$
            sh(script: "${pipe_script}", returnStdout: true)
          }
       }
