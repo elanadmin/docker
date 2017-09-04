@@ -6,7 +6,7 @@ node ("$TargetBuildSlave"){
       parameters([
         string(name: 'DockerImageName', defaultValue: 'ubuntu-elan-ssh', description: 'Docker Image Name That Needs To Be Built', ),
         string(name: 'TargetBuildSlave', defaultValue: 'edaldokp01.elan.elantecs.com', description: 'Docker Slave', ),
-        string(name: 'Dockerfile', defaultValue: 'Dockerfile', description: 'Docker Build Input File', )
+        string(name: 'Dockerfile', defaultValue: 'Dockerfile.ssh', description: 'Docker Build Input File', )
        ])
     ])
     
@@ -45,7 +45,7 @@ node ("$TargetBuildSlave"){
         }
     }
 
-   stage('Triggering Docker Image Cleanup') {
+   stage('Triggering Local Image Cleanup') {
         /* This will cleanup the local docker images built. */
         build job: 'Docker-Build-Cleanup', parameters: [[$class: 'StringParameterValue', name: 'DockerImageName', value: "$DockerImageName"], [$class: 'StringParameterValue', name: 'TargetBuildSlave', value: "$TargetBuildSlave"]]
     }
