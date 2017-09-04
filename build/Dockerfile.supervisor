@@ -14,7 +14,7 @@ ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
 
 ####################################################################
-RUN apt-get update && apt-get -y install curl python-software-properties software-properties-common
+RUN apt-get update && apt-get -y install curl python-software-properties software-properties-common lsof supervisor
 
 ## and install java 7 jdk
 RUN apt-get install -y default-jdk ant git
@@ -24,16 +24,20 @@ RUN apt-get install -y default-jdk ant git
 # Install Tomcat
 ## Add your webapp file into your docker image into Tomcat's webapps directory
 ## Your webapp file must be at the same location as your Dockerfile
+# ADD mywebapp.war /var/lib/tomcat7/webapps/
+#
+## Expose TCP port 8080
+#
+# # Start Tomcat server
+# # The last line (the CMD command) is used to make a fake always-running
+# # command (the tail command); thus, the Docker container will keep running.
+
 RUN curl -O http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.55/bin/apache-tomcat-7.0.55.tar.gz
 RUN tar xzf apache-tomcat-7.0.55.tar.gz
 ADD files/tomcat/HelloWorld.war apache-tomcat-7.0.55/webapps/
 ADD files/tomcat/sample.war apache-tomcat-7.0.55/webapps/
 ADD files/tomcat/tomcat-users.xml apache-tomcat-7.0.55/conf/tomcat-users.xml
-
-## Expose TCP port 8080
-EXPOSE 8080 22
-
-# # Start Tomcat server
-# # The last line (the CMD command) is used to make a fake always-running
-# # command (the tail command); thus, the Docker container will keep running.
-CMD apache-tomcat-7.0.55/bin/startup.sh && tail -f apache-tomcat-7.0.55/logs/catalina.out
+ADD files/tomcat/tomcat.conf /etc/supervisor/conf.d/tomcat.conf
+ADD files/ssh/sshd.conf /etc/supervisor/conf.d/sshd.conf
+CMD /usr/bin/supervisord --nodaemon
+EXPOSE 8080 22 9001
