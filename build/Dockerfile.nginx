@@ -1,0 +1,23 @@
+# nginx
+#
+# VERSION               0.0.2
+
+FROM ubuntu:14.04
+MAINTAINER Sven Dowideit <SvenDowideit@docker.com>
+
+RUN export TERM=vt100
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get clean
+RUN apt-get update && apt-get install -y nginx lsof
+RUN useradd -u 12345 -c "elanadmin account" -m -d /home/elanadmin -s /bin/bash elanadmin
+RUN echo 'root:smil3yfc' | chpasswd
+RUN echo 'elanadmin:el@nadmin12' | chpasswd
+
+ENV NOTVISIBLE "in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
+RUN echo "elanadmin\tALL=(ALL)ALL" >> /etc/sudoers
+
+EXPOSE 80 443
+CMD /usr/sbin/nginx -g 'daemon off;'
+
+VOLUME ["/usr/share/nginx/html"]
