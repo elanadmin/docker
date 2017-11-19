@@ -1,0 +1,11 @@
+nginx:
+  image: "nginx:1.10"
+  container_name: nginx-registry-frontend
+  restart: always
+  ports:
+    - 443:443
+  links:
+    - registry:registry
+  volumes:
+    - /etc/nginx:/etc/nginx
+    - /etc/ssl/certs:/etc/ssl/certs

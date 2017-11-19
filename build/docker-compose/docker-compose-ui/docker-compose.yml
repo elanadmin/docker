@@ -1,0 +1,9 @@
+docker-compose-ui:
+  image: "francescou/docker-compose-ui"
+  container_name: docker-compose-ui
+  restart: always
+  ports:
+    - 5001:5000
+  working_dir: /opt/docker-compose-projects/
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock

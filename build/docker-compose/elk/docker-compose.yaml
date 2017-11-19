@@ -1,0 +1,47 @@
+version: '2'
+
+services:
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch
+    ports:
+      - 9200
+      - 9300
+    volumes:
+      - /data/elasticsearch:/usr/share/elasticsearch/data
+    restart: always
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == edaldokp01.elan.elantecs.com
+
+  logstash:
+    container_name: logstash
+    image: logstash
+    ports:
+      - 25826:25826
+      - 25827:25827
+    volumes:
+      - /data/logstash/conf:/conf
+    command: logstash -f /conf/syslog-collectd.conf
+    restart: always
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == edaldokp02.elan.elantecs.com
+
+  kibana:
+    container_name: kibana
+    image: kibana
+    ports:
+      - 80:5601
+    restart: always
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == edaldokp02.elan.elantecs.com
+
