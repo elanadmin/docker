@@ -1,0 +1,12 @@
+[program:hellomvc]
+command=COREHOST_TRACE=1 /usr/bin/dotnet /var/aspnetcore/HelloMVC/dotnetcore/src/HostApi/bin/Debug/netcoreapp2.0/HostApi.dll
+directory=/var/aspnetcore/HelloMVC/
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/hellomvc.err.log
+stdout_logfile=/var/log/hellomvc.out.log
+environment=HOME=/var/www/,ASPNETCORE_ENVIRONMENT=Production
+user=www-data
+stopsignal=INT
+stopasgroup=true
+killasgroup=true
