@@ -9,9 +9,9 @@ node ("$TargetBuildSlave"){
         sh 'docker rmi $DockerImageName --force'
         script {
            /* def pipe_script = $/eval "docker images | grep $DockerImageName | awk '{print \$3}' | uniq | xargs -I {} docker rmi {} --force"/$ */
-           def pipe_script = $/eval "docker images | grep $DockerImageName | awk '{print $1":"$2}' | uniq | xargs -I {} docker rmi {}
+           def pipe_script = $/eval "docker images | grep $DockerImageName | awk '{print \$1"\:"\$2}' | uniq | xargs -I {} docker rmi {}
                                      if [ $? = 123 ];then
-                                     echo "A Container is running with this Image : $(docker images | grep $DockerImageName | awk '{print $1":"$2}' | uniq)"
+                                     echo "A Container is running with this Image : $(docker images | grep $DockerImageName | awk '{print \$1"\:"\$2}' | uniq)"
                                      exit 0
                                      fi"/$
            sh(script: "${pipe_script}", returnStdout: true)
