@@ -6,7 +6,8 @@ node ("$TargetBuildSlave"){
       parameters([
         string(name: 'DockerImageName', defaultValue: 'ubuntu-elan-ssh', description: 'Docker Image Name That Needs To Be Built', ),
         string(name: 'TargetBuildSlave', defaultValue: 'edaldokp01.elan.elantecs.com', description: 'Docker Slave', ),
-        string(name: 'Dockerfile', defaultValue: 'Dockerfile.ssh', description: 'Docker Build Input File', )
+        string(name: 'Dockerfile', defaultValue: 'Dockerfile.ssh', description: 'Docker Build Input File', ),
+        string(name: 'DockerHubUser', defaultValue: 'elanadmin', description: 'Docker Hub Login User', )
        ])
     ])
     
@@ -50,9 +51,13 @@ node ("$TargetBuildSlave"){
          * First, the incremental build number from Jenkins
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
-        docker.withRegistry('https://hub.docker.com', 'DockerHub') {
-            app.push("${env.BUILD_NUMBER}")
-            app.push("latest")
+        docker.withRegistry('https://docker.io', 'DockerHub') {
+            /* app.push("${env.BUILD_NUMBER}")
+             * app.push("latest") */
+            sh "docker tag ${DockerImageName} ${DockerHubUser}/${DockerImageName}:${env.BUILD_NUMBER}"
+            sh "docker tag ${DockerImageName} ${DockerHubUser}/${DockerImageName}:latest"
+            sh "docker push ${DockerHubUser}/${DockerImageName}:${env.BUILD_NUMBER}"
+            sh "docker push ${DockerHubUser}/${DockerImageName}:latest"
         }
     }
 
