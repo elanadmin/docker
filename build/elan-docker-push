@@ -1,0 +1,22 @@
+#!/bin/bash
+
+Usage () {
+echo -e "\n$0 [Local Image Name]\n"
+exit
+}
+
+limage=$1
+
+if [ -z $limage ];then
+Usage
+fi
+
+export elan_docker_reg='http://edalregp01.elan.elantecs.com:5000'
+export elan_docker_rep='edalregp01.elan.elantecs.com:5000'
+
+/root/bin/elan_docker_login
+
+echo -e "\n"
+docker tag $1 $elan_docker_rep/$1
+docker push $elan_docker_rep/$1
+echo -e "\n"

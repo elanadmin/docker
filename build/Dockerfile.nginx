@@ -21,3 +21,4 @@ EXPOSE 80 443
 CMD /usr/sbin/nginx -g 'daemon off;'
 
 VOLUME ["/usr/share/nginx/html"]
+VOLUME ["/etc/ssl/certs"]

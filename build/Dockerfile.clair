@@ -1,0 +1,33 @@
+# Build Clair Docker Image
+#
+# VERSION               2.0.0
+
+FROM docker.io/centos
+MAINTAINER Sweth Reddy <swethareddy@t-mobile.com>
+
+RUN export TERM=vt100
+RUN yum install -y openssh-server lsof curl tar git bzr rpm xz
+RUN /bin/ssh-keygen -A
+RUN mkdir /var/run/sshd
+RUN useradd -u 12345 -c "clair login account" -m -d /home/clair -G wheel -s /bin/bash clair
+RUN echo 'clair:smil3yfc' | passwd clair --stdin
+RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+ENV NOTVISIBLE "in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
+RUN echo "clair\tALL=(ALL)ALL" >> /etc/sudoers
+
+RUN curl -LO https://storage.googleapis.com/golang/go1.7.linux-amd64.tar.gz
+RUN tar -C /usr/local -xvzf go1.7.linux-amd64.tar.gz
+RUN mkdir -p ~/projects/{bin,pkg,src}
+ENV PATH=$PATH:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/go/bin:/root/projects/bin
+ENV GOBIN="/root/projects/bin"
+ENV GOPATH="/root/projects/src"
+RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+RUN cd /root/projects/src && dep init
+RUN dep ensure --add github.com/coreos/clair@release-2.0
+RUN go get github.com/coreos/clair
+RUN go install github.com/coreos/clair/cmd/clair
+
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]
