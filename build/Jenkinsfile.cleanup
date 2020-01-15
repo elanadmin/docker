@@ -11,7 +11,8 @@ node ("$TargetBuildSlave"){
            /* def pipe_script = $/eval "docker images | grep $DockerImageName | awk '{print \$3}' | uniq | xargs -I {} docker rmi {} --force"/$ */
            def pipe_script = $/"docker images | grep $DockerImageName | awk '{print \$1\":\"\$2}' | uniq | xargs -I {} docker rmi {}
                                      if [ $? = 123 ];then
-                                     echo \"Containers are running with this Image : $(docker images | grep $DockerImageName | awk '{print $1":"$2}' | uniq)\"
+                                     #echo \"Containers are running with this Image : $(docker images | grep $DockerImageName | awk '{print $1":"$2}' | uniq)\"
+                                     echo hello
                                      fi"/$
            sh(script: "${pipe_script}", returnStdout: true)
          }
