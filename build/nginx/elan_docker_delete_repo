@@ -1,0 +1,32 @@
+#!/bin/bash
+
+Usage () {
+echo -e "$0 [ImageRepo]\n"
+exit
+}
+
+repo=$1
+export elan_docker_reg='http://edalregp01.elan.elantecs.com:5000'
+export elan_docker_rep='edalregp01.elan.elantecs.com:5000'
+
+read -p "Please provide the Username :" user
+read -s -p "Please provide the Password :" pass
+
+docker pull $elan_docker_rep/$repo
+
+sha256=$(docker inspect $elan_docker_rep/$repo 2>/dev/null | grep -A 2 RepoDigests | grep sha | tr -d '"' | awk -F "@" '{print $2}')
+
+if [ ! -z $sha256 ] && [ ! -z $repo ];then
+
+echo -e "\nSHA256 for $repo is $sha256\n"
+
+echo -e "Deleting $repo from $elan_docker_rep ..\n"
+
+curl -vk -u $user:$pass -X DELETE $elan_docker_reg/v2/$repo/manifests/$sha256
+
+else
+
+echo -e "\n$repo : No Such Image Repo found at $elan_docker_reg ..\n"
+Usage
+
+fi
