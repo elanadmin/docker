@@ -1,0 +1,25 @@
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = edalregistry.elan.elantecs.com
+
+[ ca ]
+default_ca      = CA_default
+
+[ CA_default ]
+dir             = /root/bin/generate_certs
+certs		= $dir
+database	= $dir/index.txt
+certificate	= $dir/ca_crt.pem
+private_key	= $dir/ca_key.pem
+serial		= $dir/serial
+crldir		= $dir
+crlnumber	= $dir/ca_crt.srl
+crl		= $crldir/crl.pem
+RANDFILE	= $dir/.rand
+default_md      = sha512
+default_days    = 3650
+default_crl_days= 30

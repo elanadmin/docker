@@ -1,16 +1,29 @@
-registry:
-  restart: always
-  image: registry:2.4.1
-  container_name: edalregistry.elan.elantecs.com
-  restart: always
-  ports:
-    - 5000:5000
-  environment:
-    REGISTRY_HTTP_SECRET: el@nadmin12
-    REGISTRY_AUTH: htpasswd
-    REGISTRY_AUTH_HTPASSWD_PATH: /auth/docker-registry.htpasswd
-    REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
-    REGISTRY_STORAGE_DELETE_ENABLED: true
-  volumes:
-    - /var/lib/docker-registry:/var/lib/registry
-    - /etc/nginx:/auth
+version: '2'
+services:
+  registry:
+    restart: always
+    image: registry:2.4.1
+    container_name: edalregistry.elan.elantecs.com
+    restart: always
+    ports:
+      - 5000:5000
+    environment:
+      REGISTRY_HTTP_SECRET: el@nadmin12
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_PATH: /auth/docker-registry.htpasswd
+      REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
+      REGISTRY_STORAGE_DELETE_ENABLED: "true"
+    volumes:
+      - ./auth/docker-registry.htpasswd:/auth/docker-registry.htpasswd
+
+  nginx:
+    image: nginx:1.10
+    container_name: nginx-registry-frontend
+    restart: always
+    ports:
+      - 443:443
+    links:
+      - registry:registry
+    volumes:
+      - ./auth:/etc/nginx/conf.d
+      - ./auth/nginx.conf:/etc/nginx/nginx.conf:ro

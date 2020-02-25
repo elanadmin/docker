@@ -1,0 +1,18 @@
+FROM alpine:3.4
+MAINTAINER NVIJAYKARTHIK <nvijaykarthik@elantecs.com>
+
+RUN export TERM=vt100
+RUN apk update
+RUN apk add vim
+RUN apk add curl
+RUN apk add nginx
+RUN yes "el@nadmin12" | adduser -g 'Nginx www user' -h /home/www/ wwwcbz
+
+RUN chown -R wwwcbz: /var/tmp /run /var/log /var/lib /etc/nginx
+USER wwwcbz
+RUN touch /run/nginx.pid
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY default.conf /etc/nginx/conf.d/default.conf
+ENV NGINX_HTTP_PORT_NUMBER=8080
+CMD /usr/sbin/nginx -g 'daemon off;'
+EXPOSE 8080
