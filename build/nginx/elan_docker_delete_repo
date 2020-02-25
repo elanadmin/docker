@@ -6,8 +6,8 @@ exit
 }
 
 repo=$1
-export elan_docker_reg='http://edalregp01.elan.elantecs.com:5000'
-export elan_docker_rep='edalregp01.elan.elantecs.com:5000'
+export elan_docker_reg='https://edalregistry.elan.elantecs.com/v2'
+export elan_docker_rep='edalregistry.elan.elantecs.com'
 
 read -p "Please provide the Username :" user
 read -s -p "Please provide the Password :" pass
@@ -22,7 +22,7 @@ echo -e "\nSHA256 for $repo is $sha256\n"
 
 echo -e "Deleting $repo from $elan_docker_rep ..\n"
 
-curl -vk -u $user:$pass -X DELETE $elan_docker_reg/v2/$repo/manifests/$sha256
+curl -vk -u $user:$pass -X DELETE $elan_docker_reg/$repo/manifests/$sha256
 
 else
 

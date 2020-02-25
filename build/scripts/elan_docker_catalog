@@ -1,0 +1,11 @@
+#!/bin/bash
+
+export elan_docker_reg='https://edalregistry.elan.elantecs.com/v2'
+export elan_docker_rep='edalregistry.elan.elantecs.com'
+
+read -p "Please provide the Username :" user
+read -s -p "Please provide the Password :" pass
+
+echo -e "\n"
+curl -u $user:$pass -X GET $elan_docker_reg/_catalog
+echo -e "\n"

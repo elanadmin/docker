@@ -1,0 +1,24 @@
+#!/bin/bash
+
+docker ps -a
+
+echo -e "\nThis will Remove all Docer Running Containers and Images ..\n"
+
+read -p "Do You Want to Continue ..? (yes/no)" resp
+
+if [ "$resp" = yes ];then
+
+for i in $(docker ps -a | awk '{print $1}' | tail -n +2)
+do
+echo -e "\nStopping and Deleting Container $i ..\n"
+docker stop $i
+docker rm $i --force
+done
+
+for i in $(docker images | awk '{print $3}' | tail -n +2)
+do
+echo -e "\nDeleting Image $i ..\n"
+docker rmi $i --force 2>/dev/null
+done
+
+fi

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+export elan_docker_reg='https://edalregp01.elan.elantecs.com'
+export elan_docker_rep='edalregp01.elan.elantecs.com'
+
+read -p "Please provide the Username :" user
+read -s -p "Please provide the Password :" pass
+
+HEADER=$(echo "{\"user\":\"${REPO_USER}\",\"password\":\"${pass}\"}"|base64 -w 0 )
+echo -e "\n\n$HEADER\n"
+
+echo -e "Please add this on only Docker Swarm Node in ~/.docker/config.json as follows:\n"
+
+echo "config.json example:
+
+{
+        \"auths\": {
+                \"https://edalregp01.elan.elantecs.com\": {
+                        \"auth\": \"XXXXXXXXXXXXXXXXXXXX\"
+                }
+        },
+
+        \"HttpHeaders\": {
+               \"X-Registry-Auth\": \"XXXheader generated from aboveXXX\"
+        }
+
+}"

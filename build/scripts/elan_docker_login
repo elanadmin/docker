@@ -1,0 +1,17 @@
+trap docker_exit SIGQUIT SIGTERM SIGINT
+
+docker_exit () {
+echo -e "\n${R}Exiting Docker Login from $elan_docker_reg..${N}\n"
+exit
+}
+
+export elan_docker_reg='https://edalregistry.elan.elantecs.com'
+export elan_docker_rep='edalregistry.elan.elantecs.com'
+
+read -p "Please provide the Username :" user
+read -s -p "Please provide the Password :" pass
+echo -e "\n\nLogging in to Elan Docker Registry at $elan_docker_reg..\n"
+docker login --username="$user" --password="$pass" $elan_docker_reg
+echo -e "\nElan Docker Repository : \$elan_docker_rep : $elan_docker_rep\n"
+export user
+export pass
