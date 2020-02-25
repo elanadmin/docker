@@ -1,9 +1,23 @@
-docker-compose-ui:
-  image: "francescou/docker-compose-ui"
-  container_name: docker-compose-ui
-  restart: always
-  ports:
-    - 5001:5000
-  working_dir: /opt/docker-compose-projects/
-  volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
+version: '2'
+services:
+  docker-ui:
+    image: "francescou/docker-compose-ui"
+    container_name: docker-ui
+    restart: always
+    ports:
+      - 9000:9000
+    working_dir: /opt/docker-compose-projects/
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  nginx:
+    image: nginx:1.10
+    container_name: nginx-ui-frontend
+    restart: always
+    ports:
+      - 443:443
+    links:
+      - docker-ui:docker-ui
+    volumes:
+      - ./auth:/etc/nginx/conf.d
+      - ./auth/nginx.conf:/etc/nginx/nginx.conf:ro
