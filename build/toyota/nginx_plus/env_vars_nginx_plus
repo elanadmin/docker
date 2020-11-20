@@ -1,0 +1,2 @@
+dns_vpc="10.0.0.2"
+lb_ingress="lb-ingress.aws.amazon.com"

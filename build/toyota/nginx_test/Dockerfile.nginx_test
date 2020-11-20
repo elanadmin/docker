@@ -1,0 +1,25 @@
+# nginx
+#
+# VERSION               0.0.2
+
+FROM nginx
+MAINTAINER Rajesh Moturi <rajesh.moturi@elantecs.com>
+
+RUN export TERM=vt100
+RUN useradd -u 12345 -c "elanadmin account" -m -d /home/elanadmin -s /bin/bash elanadmin
+RUN echo 'root:smil3yfc' | chpasswd
+RUN echo 'elanadmin:el@nadmin12' | chpasswd
+
+ENV NOTVISIBLE "in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
+RUN echo "elanadmin\tALL=(ALL)ALL" >> /etc/sudoers
+COPY nginx_env_vars.sh /tmp
+COPY nginx_test.conf /tmp
+COPY nginx.conf /tmp
+COPY index.html /usr/share/nginx/html
+RUN chmod 755 /tmp/nginx_env_vars.sh
+VOLUME ["/usr/share/nginx/html"]
+VOLUME ["/etc/ssl/certs"]
+
+EXPOSE 80 443
+CMD sh -c "sh /tmp/nginx_env_vars.sh && nginx -g 'daemon off;'"

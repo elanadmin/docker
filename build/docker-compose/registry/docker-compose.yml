@@ -15,6 +15,8 @@ services:
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
     volumes:
       - ./auth/docker-registry.htpasswd:/auth/docker-registry.htpasswd
+      - /var/lib/docker-registry:/var/lib/registry
+
 
   nginx:
     image: nginx:1.10

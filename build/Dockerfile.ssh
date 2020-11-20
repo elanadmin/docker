@@ -6,6 +6,7 @@ FROM ubuntu:14.04
 MAINTAINER Sven Dowideit <SvenDowideit@docker.com>
 
 RUN export TERM=vt100
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN apt-get clean
 RUN apt-get update && apt-get install -y openssh-server lsof
