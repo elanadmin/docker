@@ -70,6 +70,10 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
 
 COPY nginx_plus.conf /etc/nginx/nginx.conf
+COPY default.conf /etc/nginx/conf.d/
+COPY 01-env.vars /etc/nginx/conf.d/
+COPY 01-http-env.conf /etc/nginx/conf.d/
+COPY index.html /usr/share/nginx/html/
 
 EXPOSE 80
 

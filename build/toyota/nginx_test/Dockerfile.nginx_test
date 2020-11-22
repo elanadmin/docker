@@ -14,8 +14,7 @@ ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
 RUN echo "elanadmin\tALL=(ALL)ALL" >> /etc/sudoers
 COPY nginx_env_vars.sh /tmp
-COPY nginx_test.conf /tmp
-COPY nginx.conf /tmp
+COPY default.conf /etc/nginx/conf.d/
 COPY index.html /usr/share/nginx/html
 RUN chmod 755 /tmp/nginx_env_vars.sh
 VOLUME ["/usr/share/nginx/html"]
