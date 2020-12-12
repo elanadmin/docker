@@ -1,16 +1,19 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 ###-->This Script Interpolates Container Environment Variables, defined in nginx.conf<--###
 
 set -eu
 
-cp -rp /etc/nginx/nginx.conf /tmp/nginx.conf
-cp -rp /usr/share/nginx/html/index.html /tmp/index.html
-envsubst "$(env | awk -F = '{printf " $%s", $1}')" < /tmp/nginx.conf > /tmp/nginx.conf.rendered
-envsubst "$(env | awk -F = '{printf " $%s", $1}')" < /tmp/index.html > /tmp/index.html.rendered
-mv /tmp/nginx.conf.rendered /etc/nginx/nginx.conf
-mv /tmp/index.html.rendered /usr/share/nginx/html/index.html
-rm /tmp/nginx.conf /tmp/index.html
+configs=(/etc/nginx/nginx.conf /usr/share/nginx/html/index.html)
+
+for config in ${configs[@]}
+do
+  conf=${config##*/}
+  cp -rp $config /tmp/$conf
+  envsubst "$(env | awk -F = '{printf " $%s", $1}')" < /tmp/$conf > /tmp/$conf.rendered
+  mv /tmp/$conf.rendered $config
+  rm /tmp/$conf
+done
 
 exec "$@"
 
